@@ -7,6 +7,7 @@ Focus is a command-line tool crafted to enhance your concentration during tasks 
 - **Setup**: Configure the list of distracting websites by running `sudo focus setup --list <path to txt file>`. Provide a text file containing the URLs you want to block.
 
 - **Blocking Websites**: Once set up, use the `sudo focus` command with the desired time and task parameters to initiate website blocking. For example, `sudo focus --time 1h --task study` will block distracting websites for one hour during your study session.
+- **Safety Command**: In case of a sudden system crash, unexpected shutdown, or accidental closure of the terminal, you can use the command `sudo focus reset` to manually unblock all websites and restore the original hosts file, ensuring uninterrupted access to the web.
 
 ## Usage
 
