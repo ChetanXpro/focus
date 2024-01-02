@@ -3,7 +3,7 @@
 Focus is a command-line tool crafted to enhance your concentration during tasks by blocking distracting websites. This tool modifies your system's hosts file to restrict access to specified websites for a designated period. Once this period elapses, it automatically unblocks the restricted websites, allowing you to access them freely.
 
 
-## How It Works Under the Hood
+# How It Works Under the Hood
 
 ### System Hosts File
 
@@ -19,14 +19,14 @@ Once the predefined blocking time elapses, Focus automatically restores the orig
 
 
 
-## Features
+# Features
 
 - **Setup**: Configure the list of distracting websites by running `sudo focus setup --list <path to txt file>`. Provide a text file containing the URLs you want to block.
 
 - **Blocking Websites**: Once set up, use the `sudo focus` command with the desired time and task parameters to initiate website blocking. For example, `sudo focus --time 1h --task study` will block distracting websites for one hour during your study session.
 - **Safety Command**: In case of a sudden system crash, unexpected shutdown, or accidental closure of the terminal, you can use the command `sudo focus reset` to manually unblock all websites and restore the original hosts file, ensuring uninterrupted access to the web.
 
-## Usage
+# Usage
 
 ### Setup
 
@@ -71,12 +71,12 @@ sudo focus --time 45m --task coding
 ```
 In this example, a list of distracting websites is set up from a file, and website blocking is initiated for 45 minutes during a coding session.
 
-## Important
+# Important
 
 - Ensure that you have administrative privileges (sudo) to modify the system's hosts file.
 - Use responsibly, as blocking websites affects the entire system.
 
-## Troubleshooting Browser Cache Issues
+# Troubleshooting Browser Cache Issues
 
 If you find that websites are still accessible even after blocking them in the hosts file, it might be due to browser caching. Here are some solutions to address this issue:
 
