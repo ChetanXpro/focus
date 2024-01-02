@@ -3,6 +3,12 @@
 Focus is a command-line tool crafted to enhance your concentration during tasks by blocking distracting websites. This tool modifies your system's hosts file to restrict access to specified websites for a designated period. Once this period elapses, it automatically unblocks the restricted websites, allowing you to access them freely.
 
 
+
+https://github.com/ChetanXpro/focus/assets/107798155/a1c1988d-4f65-48a2-bc51-2d04e80ffdb3
+
+
+
+
 # How It Works Under the Hood
 
 ### System Hosts File
