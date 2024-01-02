@@ -37,6 +37,14 @@ Replace <duration> with the desired time for blocking websites (e.g., 1h for one
 *Note*: Running both setup and the main focus command requires the use of sudo as the tool modifies the system's hosts file.
 
 
+### Safety Command
+
+```bash
+sudo focus reset
+```
+Use this command to manually unblock all websites and restore the original hosts file in case of unexpected terminations.
+
+
 ## Example
 
 ```bash
