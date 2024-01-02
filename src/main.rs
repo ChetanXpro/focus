@@ -165,14 +165,14 @@ fn block_websites(time_to_sleep: u64, task: &String, user_input_time: &String) -
 
     hosts_content.push_str(&format!("\n# ========== Temp Hosts ========="));
     for website in website_list {
-        // println!("Website: {}",website);
+        println!("Website: {}", website);
 
         if !hosts_content.contains(website) {
             hosts_content.push_str(&format!("\n127.0.0.1\t{}", website));
         }
     }
     hosts_content.push_str(&format!("\n# ========== Temp Hosts ========="));
-    // println!("Content:\n {}", hosts_content);
+    println!("Content:\n {}", hosts_content);
 
     let mut file = OpenOptions::new()
         .write(true)

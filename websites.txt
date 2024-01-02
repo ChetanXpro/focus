@@ -1,2 +1,10 @@
-www.youtube.com
-www.twitter.com
+youtube.com
+twitter.com
+facebook.com
+instagram.com
+linkedin.com
+reddit.com
+snapchat.com
+quora.com
+medium.com
+
