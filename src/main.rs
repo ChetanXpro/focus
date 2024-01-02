@@ -112,6 +112,11 @@ fn block_websites(time_to_sleep: u64, task: &String, user_input_time: &String) -
     if let Some(proj_dirs) = ProjectDirs::from("com", "chetanxpro", "focusguard") {
         let config_dir = proj_dirs.config_dir();
 
+        if !config_dir.join("config.toml").exists() {
+            println!("Please run `focus setup --list <exact path to website list>` to setup focus");
+            std::process::exit(1);
+        }
+
         if !config_dir.exists() {
             fs::create_dir_all(config_dir).expect("Error while creating config directory");
 
