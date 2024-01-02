@@ -76,6 +76,30 @@ In this example, a list of distracting websites is set up from a file, and websi
 - Ensure that you have administrative privileges (sudo) to modify the system's hosts file.
 - Use responsibly, as blocking websites affects the entire system.
 
+## Troubleshooting Browser Cache Issues
+
+If you find that websites are still accessible even after blocking them in the hosts file, it might be due to browser caching. Here are some solutions to address this issue:
+
+1. **Clear Browser Cache:**
+   - Manually clear the browser cache. This process varies by browser, so check your browser's settings or history section for the option to clear cached data.
+
+2. **Restart Browser:**
+   - Restart your browser after making changes to the hosts file. This simple step can help ensure that the changes take effect.
+
+3. **Flush DNS Cache:**
+   - On Windows, open Command Prompt as Administrator and run `ipconfig /flushdns`.
+   - On macOS/Linux, open Terminal and run `sudo dscacheutil -flushcache` or `sudo systemctl restart nscd`.
+
+4. **Use Private Browsing Mode:**
+   - Access the blocked websites in a private or incognito browsing mode. This mode typically bypasses the cache and reflects the updated hosts file.
+
+6. **System Reboot:**
+   - Perform a system reboot to ensure that the hosts file changes are fully applied.
+
+
+Note: Changes to the hosts file may take some time to propagate, and the effectiveness of these solutions may vary based on the browser and operating system.
+
+
 *Stay focused with Focus! 🚀*
 
 
