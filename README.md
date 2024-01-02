@@ -30,6 +30,7 @@ Once the predefined blocking time elapses, Focus automatically restores the orig
 
 ### Setup
 
+First create a txt file like websites.txt and then copy its absolute path.
 ```bash
 sudo focus setup --list /path/to/your/websites.txt
 ```
