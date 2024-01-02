@@ -1,14 +1,18 @@
 use clap::{Args, Parser, Subcommand};
+use crossterm::{
+    event::{poll, read, Event, KeyCode},
+    terminal::{disable_raw_mode, enable_raw_mode},
+};
 use directories::ProjectDirs;
-use kbar::Bar;
+
 use serde::Serialize;
-use std::fs;
-use std::fs::OpenOptions;
-use std::io;
+use spinners::{Spinner, Spinners};
+use std::io::{self};
 use std::path::PathBuf;
 
-use std::thread::sleep;
 use std::time::Duration;
+use std::{fs, io::Result};
+use std::{fs::OpenOptions, time::Instant};
 use toml;
 
 use toml::Value;
@@ -24,10 +28,8 @@ struct Config {
 #[derive(Parser)]
 #[command(author, version)]
 #[command(
-    about = "stringer - a simple CLI to transform and inspect strings",
-    long_about = "stringer is a super fancy CLI (kidding)
-
-One can use stringer to modify or inspect strings straight from the terminal"
+    about = "focus - a simple CLI to stay focused and productive",
+    long_about = "focus - a simple CLI to stay focused and productive"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -44,6 +46,8 @@ struct Cli {
 enum Commands {
     /// Reverses a string
     Setup(Setup),
+    // Reset hosts file
+    Reset,
 }
 
 #[derive(Args)]
@@ -74,7 +78,33 @@ const fn get_hosts_path() -> &'static str {
     }
 }
 
-fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
+// https://github.com/crossterm-rs/crossterm/blob/0.19/examples/event-poll-read.rs#L26
+fn print_events_with_timer(timer_duration: Duration) -> Result<()> {
+    let start_time = Instant::now();
+    println!("  ESC or 'e' to exit early");
+    loop {
+        // Wait up to 1s for another event
+        if poll(Duration::from_millis(1_000))? {
+            // It's guaranteed that read() won't block if `poll` returns `Ok(true)`
+            let event = read()?;
+
+            if event == Event::Key(KeyCode::Char('e').into()) {
+                break;
+            }
+            if event == Event::Key(KeyCode::Esc.into()) {
+                break;
+            }
+        } else {
+            if start_time.elapsed() >= timer_duration {
+                break;
+            } else {
+            }
+        }
+    }
+
+    Ok(())
+}
+fn block_websites(time_to_sleep: u64, task: &String, user_input_time: &String) -> io::Result<()> {
     let hosts_path: &str = get_hosts_path();
     let mut backup_path: PathBuf = PathBuf::new();
     let mut toml_config_path: PathBuf = PathBuf::new();
@@ -88,12 +118,20 @@ fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
             backup_path = config_dir.join("hosts_backup");
 
             fs::File::create(&backup_path).expect("Error while creating hosts backup file");
+
+            let mut backup_host_file_for_emergency =
+                fs::File::create(config_dir.join("hosts_backup_for_revert"))
+                    .expect("Error while creating hosts backup file");
+
+            backup_host_file_for_emergency
+                .write_all(fs::read_to_string(hosts_path).unwrap().as_bytes())
+                .expect("Error while writing to backup file");
         }
 
         backup_path = config_dir.join("hosts_backup");
         toml_config_path = config_dir.join("config.toml");
 
-        dbg!(config_dir);
+        // dbg!(config_dir);
     }
 
     let website_file_option = get_websites_path(toml_config_path);
@@ -105,7 +143,7 @@ fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
     let websites_list_content: String =
         fs::read_to_string(websites_file_path).expect("Error while reading website contetn");
 
-    dbg!(&backup_path);
+    // dbg!(&backup_path);
     let mut backup_file = OpenOptions::new()
         .write(true)
         .truncate(true)
@@ -129,7 +167,7 @@ fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
         }
     }
     hosts_content.push_str(&format!("\n# ========== Temp Hosts ========="));
-    println!("Content:\n {}", hosts_content);
+    // println!("Content:\n {}", hosts_content);
 
     let mut file = OpenOptions::new()
         .write(true)
@@ -137,20 +175,22 @@ fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
         .open(hosts_path)?;
     file.write_all(hosts_content.as_bytes())?;
 
-    println!("Websites blocked");
+    let formated_message = format!(
+        "Blocked websites for {} for task: {}",
+        user_input_time, task
+    );
+    let mut sp = Spinner::new(Spinners::Dots9, formated_message.into());
+    enable_raw_mode()?;
 
-    let mut bar = Bar::new();
-    let format_task = format!("Timer for Task: {}", task);
-    bar.set_job_label(&format_task);
+    let timer_duration = Duration::from_millis(time_to_sleep);
 
-    for i in 0..101 {
-        sleep(Duration::from_millis(time_to_sleep));
-        bar.reach_percent(i);
+    if let Err(e) = print_events_with_timer(timer_duration) {
+        println!("Error: {:?}\r", e);
     }
 
-    sleep(Duration::from_millis(time_to_sleep));
+    disable_raw_mode()?;
+    sp.stop();
 
-    println!("Websites unblocked");
     let backup_file_content: String =
         fs::read_to_string(backup_path).expect("Error while reading backup file");
 
@@ -164,6 +204,7 @@ fn block_websites(time_to_sleep: u64, task: &String) -> io::Result<()> {
         .write_all(backup_file_content.as_bytes())
         .unwrap();
 
+    println!("\n  Unblocked websites ✅");
     Ok(())
 }
 
@@ -215,10 +256,33 @@ fn main() {
                 println!("Website file path saved in config ✅")
             }
         }
+        Some(Commands::Reset) => {
+            let hosts_path: &str = get_hosts_path();
+            let mut backup_path: PathBuf = PathBuf::new();
+
+            if let Some(proj_dirs) = ProjectDirs::from("com", "chetanxpro", "focusguard") {
+                let config_dir = proj_dirs.config_dir();
+
+                backup_path = config_dir.join("hosts_backup");
+            }
+
+            let backup_file_content: String =
+                fs::read_to_string(backup_path).expect("Error while reading backup file");
+
+            let mut host_file = OpenOptions::new()
+                .write(true)
+                .truncate(true)
+                .open(hosts_path)
+                .unwrap();
+
+            host_file.write_all(backup_file_content.as_bytes()).unwrap();
+
+            println!("Hosts file reset ✅")
+        }
         None => {
             if let (Some(time), Some(task)) = (cli.time, cli.task) {
                 // println!("lol")
-                println!("Time: {:#?} , Task: {}", time, task);
+                // println!("Time: {:#?} , Task: {}", time, task);
 
                 let mut time_in_milliseconds: u64;
                 // let time: String = cli.time;
@@ -226,18 +290,18 @@ fn main() {
 
                 if time.contains("m") {
                     time_in_milliseconds = time.replace("m", "").parse().unwrap();
-                    time_in_milliseconds = (time_in_milliseconds * 60 * 1000) / 100;
+                    time_in_milliseconds = time_in_milliseconds * 60 * 1000
                 } else if time.contains("s") {
                     time_in_milliseconds = time.replace("s", "").parse().unwrap();
-                    time_in_milliseconds = (time_in_milliseconds * 1000) / 100;
+                    time_in_milliseconds = time_in_milliseconds * 1000
                 } else if time.contains("h") {
                     time_in_milliseconds = time.replace("h", "").parse().unwrap();
-                    time_in_milliseconds = (time_in_milliseconds * 60 * 60 * 1000) / 100;
+                    time_in_milliseconds = time_in_milliseconds * 60 * 60 * 1000
                 } else {
                     time_in_milliseconds = 0
                 }
 
-                block_websites(time_in_milliseconds, &task).expect("Error")
+                block_websites(time_in_milliseconds, &task, &time).expect("Error")
             } else {
                 println!("No command provided");
             }
