@@ -13,3 +13,6 @@ clap = { version = "4.4.12", features = ["derive"] }
 kbar = "0.1.5"
 argh = "0.1.12"
 directories = "5.0.1"
+simple-home-dir = "0.2.1"
+serde = "1.0"
+toml = "0.8.8"
