@@ -2,6 +2,23 @@
 
 Focus is a command-line tool crafted to enhance your concentration during tasks by blocking distracting websites. This tool modifies your system's hosts file to restrict access to specified websites for a designated period. Once this period elapses, it automatically unblocks the restricted websites, allowing you to access them freely.
 
+
+## How It Works Under the Hood
+
+### System Hosts File
+
+The hosts file is a plain text file on your computer that maps hostnames to IP addresses. It is commonly used to override DNS settings and redirect traffic locally. In Unix-based systems like macOS, the hosts file is located at `/etc/hosts`. Focus utilizes this file to control access to specific websites.
+
+### Blocking Mechanism
+
+When you initiate a task using the `sudo focus` command, Focus edits the hosts file to redirect all specified distracting websites to the loopback address (127.0.0.1). This effectively blocks access to those websites on your system.
+
+### Automatic Unblocking
+
+Once the predefined blocking time elapses, Focus automatically restores the original hosts file, unblocking the specified websites. This seamless process ensures that your access to distracting websites is only restricted during the designated focus period.
+
+
+
 ## Features
 
 - **Setup**: Configure the list of distracting websites by running `sudo focus setup --list <path to txt file>`. Provide a text file containing the URLs you want to block.
