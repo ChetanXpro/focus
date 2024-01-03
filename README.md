@@ -79,10 +79,18 @@ sudo focus setup --list /path/to/your/websites.txt
 ```
 Replace /path/to/your/websites.txt with the absolute path to the text file containing the list of distracting websites. The file should have one website URL per line. For example:
 
-websites.txt:
+- my websites.txt:
 ```
-www.youtube.com
-www.twitter.com
+youtube.com
+twitter.com
+facebook.com
+instagram.com
+linkedin.com
+reddit.com
+snapchat.com
+quora.com
+medium.com
+
 
 ```
 ### Blocking Websites
