@@ -40,21 +40,22 @@ Once the predefined blocking time elapses, Focus automatically restores the orig
 To use Focus, follow these installation steps:
 
 1. Clone the repository to your local machine:
-   ```bash
-   git clone https://github.com/ChetanXpro/focus
-   ```
-2. Navigate to the project directory:
+
+```bash
+git clone https://github.com/ChetanXpro/focus
+```
+3. Navigate to the project directory:
 
 ```bash
 cd focus
 ```
 
 3. Build the project using Cargo:
-   ```bash
-   cargo build --release
-
-   ```
-4. Move the binary to a directory in your system's PATH (e.g., /usr/local/bin/):
+ 
+```bash
+ cargo build --release
+```
+5. Move the binary to a directory in your system's PATH (e.g., /usr/local/bin/):
 ```bash
 sudo mv target/release/focus /usr/local/bin/
 ```
