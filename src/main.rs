@@ -34,17 +34,17 @@ struct Config {
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
-    /// timer for blocker
+    /// time for which you want to block websites
     #[arg(long = "time")]
     time: Option<String>,
-    /// task name
+    /// task name for which you want to block websites
     #[arg(long = "task")]
     task: Option<String>,
 }
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Reverses a string
+    /// Setup focus
     Setup(Setup),
     // Reset hosts file
     Reset,
