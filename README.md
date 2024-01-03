@@ -32,6 +32,42 @@ Once the predefined blocking time elapses, Focus automatically restores the orig
 - **Blocking Websites**: Once set up, use the `sudo focus` command with the desired time and task parameters to initiate website blocking. For example, `sudo focus --time 1h --task study` will block distracting websites for one hour during your study session.
 - **Safety Command**: In case of a sudden system crash, unexpected shutdown, or accidental closure of the terminal, you can use the command `sudo focus reset` to manually unblock all websites and restore the original hosts file, ensuring uninterrupted access to the web.
 
+
+## Installation
+
+### For Unix-Based Systems (Linux and macOS):
+
+To use Focus, follow these installation steps:
+
+1. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/ChetanXpro/focus
+   ```
+2. Navigate to the project directory:
+
+```bash
+cd focus
+```
+
+3. Build the project using Cargo:
+   ```bash
+   cargo build --release
+
+   ```
+4. Move the binary to a directory in your system's PATH (e.g., /usr/local/bin/):
+```bash
+sudo mv target/release/focus /usr/local/bin/
+```
+
+## For Windows:
+
+After building project with command `cargo build --release` 
+Copy the generated binary (focus.exe) from the target\release directory to a directory in your system's PATH.
+
+For example, you can copy it to C:\Windows\System32 or any other directory that is included in the system's PATH.
+
+Now, you can use the focus or focus.exe command to set up and manage website blocking. Remember to run the commands with administrative privileges on Windows.
+
 # Usage
 
 ### Setup
