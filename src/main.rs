@@ -46,7 +46,7 @@ struct Cli {
 enum Commands {
     /// Setup focus
     Setup(Setup),
-    // Reset hosts file
+    /// Reset OS hosts file to original
     Reset,
 }
 
